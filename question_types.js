@@ -536,6 +536,68 @@ function initMatchingInteraction() {
     });
 }
 
+// Add this function for mobile touch support
+function addTouchSupport(draggable, dropZones) {
+    let draggedElement = null;
+
+    draggable.addEventListener('touchstart', (e) => {
+        draggedElement = draggable;
+        draggable.style.opacity = '0.8';
+        draggable.style.transform = 'scale(1.1)';
+        draggable.classList.add('dragging');
+        e.preventDefault(); // Prevent scrolling
+    });
+
+    draggable.addEventListener('touchend', (e) => {
+        if (draggedElement) {
+            draggedElement.style.opacity = '';
+            draggedElement.style.transform = '';
+            draggedElement.classList.remove('dragging');
+            draggedElement = null;
+        }
+    });
+
+    draggable.addEventListener('touchmove', (e) => {
+        e.preventDefault(); // Prevent scrolling while dragging
+    });
+
+    dropZones.forEach(zone => {
+        zone.addEventListener('touchstart', (e) => {
+            if (draggedElement) {
+                e.preventDefault();
+
+                // Handle different zone types
+                if (zone.classList.contains('drop-zone')) {
+                    // For categorization drag & drop
+                    zone.appendChild(draggedElement);
+                    console.log(`Touch moved ${draggedElement.dataset.value} to ${zone.dataset.category}`);
+                } else if (zone.classList.contains('number-position')) {
+                    // For number line
+                    const existingNumber = zone.querySelector('.number-item');
+                    if (existingNumber) {
+                        // Move existing number back to collection
+                        const collection = document.querySelector('.number-collection');
+                        if (collection) {
+                            existingNumber.classList.remove('placed');
+                            collection.appendChild(existingNumber);
+                        }
+                    }
+                    // Place the new number
+                    zone.appendChild(draggedElement);
+                    draggedElement.classList.add('placed');
+                    console.log(`Touch placed ${draggedElement.dataset.value} at position ${zone.dataset.position}`);
+                }
+
+                // Reset dragged element
+                draggedElement.style.opacity = '';
+                draggedElement.style.transform = '';
+                draggedElement.classList.remove('dragging');
+                draggedElement = null;
+            }
+        });
+    });
+}
+
 // --- Drag & Drop Functions ---
 function initCategorizationDragDrop() {
     try {
@@ -549,6 +611,7 @@ function initCategorizationDragDrop() {
             draggable.setAttribute('tabindex', '0');
             draggable.setAttribute('role', 'button');
             draggable.setAttribute('aria-grabbed', 'false');
+            addTouchSupport(draggable, dropZones);
 
             draggable.addEventListener('dragstart', (e) => {
                 draggable.classList.add('dragging');
@@ -694,6 +757,7 @@ function initNumberLineInteraction() {
             item.setAttribute('tabindex', '0');
             item.setAttribute('role', 'button');
             item.setAttribute('aria-grabbed', 'false');
+            addTouchSupport(item, numberPositions);
 
             item.addEventListener('dragstart', (e) => {
                 item.classList.add('dragging');
@@ -916,3 +980,4 @@ function resetNumberLine() {
         console.error('Error resetting number line:', error);
     }
 }
+
