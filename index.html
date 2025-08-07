@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Question Types - Educational Assessment Tool</title>
+    <link rel="stylesheet" href="question_types.css">
+    <meta name="description" content="Interactive educational assessment tool featuring multiple question types including multiple choice, drag and drop, matching, and more.">
+</head>
+<body>
+<header>
+    <h1 class="sr-only">Interactive Question Assessment Tool</h1>
+    <nav class="top-buttons" role="navigation" aria-label="Question controls">
+        <button onclick="resetAll()" aria-describedby="reset-help">Reset All Answers</button>
+        <button onclick="showAllCorrectAnswers()" aria-describedby="show-help">Show All Correct Answers</button>
+    </nav>
+    <div id="reset-help" class="sr-only">Reset all questions to their initial state</div>
+    <div id="show-help" class="sr-only">Display the correct answers for all questions</div>
+</header>
+
+<main role="main">
+    <!-- Multiple Choice -->
+    <section class="question-block multiple-choice-question" role="group" aria-labelledby="mc-title">
+        <h2 id="mc-title">Multiple Choice Question</h2>
+        <p id="mc-question">What is the capital of France?</p>
+        <fieldset>
+            <legend class="sr-only">Choose one answer</legend>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="Berlin" aria-describedby="mc-question">
+                Berlin
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="Madrid" aria-describedby="mc-question">
+                Madrid
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="Paris" aria-describedby="mc-question">
+                Paris
+            </label>
+            <label class="answer-option">
+                <input type="radio" name="q1" value="Rome" aria-describedby="mc-question">
+                Rome
+            </label>
+        </fieldset>
+        <button class="check-button" onclick="checkMultipleChoice('q1', 'Paris', this)" aria-describedby="mc-feedback">
+            Check Answer
+        </button>
+        <button class="show-answer-button" onclick="showCorrectAnswer(this)" aria-describedby="mc-feedback">
+            Show Correct Answer
+        </button>
+        <div class="feedback" id="mc-feedback" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- Multiple Select -->
+    <section class="question-block multiple-select-question" role="group" aria-labelledby="ms-title">
+        <h2 id="ms-title">Multiple Select Question</h2>
+        <p id="ms-question">Select all prime numbers:</p>
+        <fieldset>
+            <legend class="sr-only">Select all correct answers</legend>
+            <label class="answer-option">
+                <input type="checkbox" name="q2" value="2" aria-describedby="ms-question">
+                2
+            </label>
+            <label class="answer-option">
+                <input type="checkbox" name="q2" value="3" aria-describedby="ms-question">
+                3
+            </label>
+            <label class="answer-option">
+                <input type="checkbox" name="q2" value="4" aria-describedby="ms-question">
+                4
+            </label>
+            <label class="answer-option">
+                <input type="checkbox" name="q2" value="5" aria-describedby="ms-question">
+                5
+            </label>
+        </fieldset>
+        <button class="check-button" onclick="checkMultipleSelect('q2', ['2','3','5'], this)" aria-describedby="ms-feedback">
+            Check Answer
+        </button>
+        <button class="show-answer-button" onclick="showCorrectAnswer(this)" aria-describedby="ms-feedback">
+            Show Correct Answer
+        </button>
+        <div class="feedback" id="ms-feedback" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- True / False -->
+    <section class="question-block true-false-question" role="group" aria-labelledby="tf-title">
+        <h2 id="tf-title">True / False Question</h2>
+        <p id="tf-question">The sun rises in the west.</p>
+        <fieldset>
+            <legend class="sr-only">Choose true or false</legend>
+            <div class="true-false-buttons" role="radiogroup" aria-labelledby="tf-question">
+                <button
+                        class="true-button"
+                        role="radio"
+                        aria-checked="false"
+                        onclick="checkTrueFalse(false, this)"
+                        aria-describedby="tf-feedback"
+                >
+                    True
+                </button>
+                <button
+                        class="false-button"
+                        role="radio"
+                        aria-checked="false"
+                        onclick="checkTrueFalse(true, this)"
+                        aria-describedby="tf-feedback"
+                >
+                    False
+                </button>
+            </div>
+        </fieldset>
+        <button class="show-answer-button" onclick="showCorrectAnswer(this)" aria-describedby="tf-feedback">
+            Show Correct Answer
+        </button>
+        <div class="feedback" id="tf-feedback" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- Matching (Line-Based) -->
+    <section class="question-block matching-question" role="group" aria-labelledby="match-title">
+        <h2 id="match-title">Matching Question</h2>
+        <p id="match-question">Match each item on the left to the correct category on the right:</p>
+        <p class="sr-only">Instructions: Click on an item from the left column, then click on the matching item from the right column to create a match.</p>
+
+        <div class="matching-wrapper">
+            <div class="matching-container" role="application" aria-labelledby="match-question">
+                <div class="match-column left-column" role="group" aria-label="Items to match">
+                    <div class="match-item left-item"
+                         data-id="apple"
+                         role="button"
+                         tabindex="0"
+                         aria-describedby="match-instructions"
+                         aria-pressed="false">
+                        Apple
+                    </div>
+                    <div class="match-item left-item"
+                         data-id="carrot"
+                         role="button"
+                         tabindex="0"
+                         aria-describedby="match-instructions"
+                         aria-pressed="false">
+                        Carrot
+                    </div>
+                    <div class="match-item left-item"
+                         data-id="salmon"
+                         role="button"
+                         tabindex="0"
+                         aria-describedby="match-instructions"
+                         aria-pressed="false">
+                        Salmon
+                    </div>
+                </div>
+                <div class="match-column right-column" role="group" aria-label="Categories">
+                    <div class="match-item right-item"
+                         data-id="fruit"
+                         role="button"
+                         tabindex="0"
+                         aria-describedby="match-instructions"
+                         aria-pressed="false">
+                        Fruit
+                    </div>
+                    <div class="match-item right-item"
+                         data-id="vegetable"
+                         role="button"
+                         tabindex="0"
+                         aria-describedby="match-instructions"
+                         aria-pressed="false">
+                        Vegetable
+                    </div>
+                    <div class="match-item right-item"
+                         data-id="protein"
+                         role="button"
+                         tabindex="0"
+                         aria-describedby="match-instructions"
+                         aria-pressed="false">
+                        Protein
+                    </div>
+                </div>
+            </div>
+            <svg class="matching-lines" aria-hidden="true"></svg>
+        </div>
+        <div id="match-instructions" class="sr-only">
+            To create a match, first select an item from the left column, then select the corresponding category from the right column.
+        </div>
+
+        <button class="check-button" onclick="checkMatching(this)" aria-describedby="match-feedback">
+            Check Matches
+        </button>
+        <button class="show-answer-button" onclick="showMatchingAnswer(this)" aria-describedby="match-feedback">
+            Show Correct Matches
+        </button>
+        <div class="feedback" id="match-feedback" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- Drag and Drop Sorting -->
+    <section class="question-block drag-drop-categorization" role="group" aria-labelledby="drag-title">
+        <h2 id="drag-title">Drag and Drop Categorization</h2>
+        <p id="drag-question">Drag each number to the correct category:</p>
+        <p class="sr-only">Instructions: Use mouse to drag items or use keyboard to select items and move them to categories.</p>
+
+        <div class="drag-items"
+             role="group"
+             aria-label="Numbers to categorize"
+             aria-describedby="drag-instructions">
+            <div class="draggable"
+                 draggable="true"
+                 data-value="1"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="drag-instructions">
+                1
+            </div>
+            <div class="draggable"
+                 draggable="true"
+                 data-value="2"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="drag-instructions">
+                2
+            </div>
+            <div class="draggable"
+                 draggable="true"
+                 data-value="3"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="drag-instructions">
+                3
+            </div>
+            <div class="draggable"
+                 draggable="true"
+                 data-value="4"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="drag-instructions">
+                4
+            </div>
+            <div class="draggable"
+                 draggable="true"
+                 data-value="5"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="drag-instructions">
+                5
+            </div>
+        </div>
+
+        <div class="drop-zones" role="group" aria-label="Drop zones">
+            <div class="drop-zone"
+                 data-category="odd"
+                 role="region"
+                 aria-label="Odd Numbers Category"
+                 aria-describedby="drag-instructions">
+                <h3>Odd Numbers</h3>
+            </div>
+            <div class="drop-zone"
+                 data-category="even"
+                 role="region"
+                 aria-label="Even Numbers Category"
+                 aria-describedby="drag-instructions">
+                <h3>Even Numbers</h3>
+            </div>
+        </div>
+
+        <div id="drag-instructions" class="sr-only">
+            Drag and drop interface: Use mouse to drag numbers to appropriate categories, or use keyboard to select items and move them.
+        </div>
+
+        <button class="check-button" onclick="checkDragDrop(this)" aria-describedby="drag-feedback">
+            Check Categorization
+        </button>
+        <button class="show-answer-button" onclick="showDragDropAnswer(this)" aria-describedby="drag-feedback">
+            Show Correct Categories
+        </button>
+        <div class="feedback" id="drag-feedback" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- Number Line Interaction -->
+    <section class="question-block number-line-question" role="group" aria-labelledby="nl-title">
+        <h2 id="nl-title">Number Line Question</h2>
+        <p id="nl-question">Place the numbers on the number line in the correct order:</p>
+        <p class="sr-only">Instructions: Drag each number from the collection area to its correct position on the number line below.</p>
+
+        <!-- Numbers to be placed -->
+        <div class="number-collection"
+             role="group"
+             aria-label="Numbers to place"
+             aria-describedby="nl-instructions">
+            <div class="number-item"
+                 draggable="true"
+                 data-value="-5"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="nl-instructions">
+                -5
+            </div>
+            <div class="number-item"
+                 draggable="true"
+                 data-value="-2"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="nl-instructions">
+                -2
+            </div>
+            <div class="number-item"
+                 draggable="true"
+                 data-value="0"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="nl-instructions">
+                0
+            </div>
+            <div class="number-item"
+                 draggable="true"
+                 data-value="1"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="nl-instructions">
+                1
+            </div>
+            <div class="number-item"
+                 draggable="true"
+                 data-value="4"
+                 role="button"
+                 tabindex="0"
+                 aria-grabbed="false"
+                 aria-describedby="nl-instructions">
+                4
+            </div>
+        </div>
+
+        <!-- Number Line -->
+        <div class="number-line-container" role="application" aria-labelledby="nl-question">
+            <div class="number-line">
+                <!-- Tick marks and positions -->
+                <div class="number-line-track">
+                    <div class="tick-mark major" data-position="-6">
+                        <span class="tick-label">-6</span>
+                    </div>
+                    <div class="tick-mark minor" data-position="-5"></div>
+                    <div class="tick-mark minor" data-position="-4"></div>
+                    <div class="tick-mark minor" data-position="-3"></div>
+                    <div class="tick-mark minor" data-position="-2"></div>
+                    <div class="tick-mark minor" data-position="-1"></div>
+                    <div class="tick-mark major" data-position="0">
+                        <span class="tick-label">0</span>
+                    </div>
+                    <div class="tick-mark minor" data-position="1"></div>
+                    <div class="tick-mark minor" data-position="2"></div>
+                    <div class="tick-mark minor" data-position="3"></div>
+                    <div class="tick-mark minor" data-position="4"></div>
+                    <div class="tick-mark minor" data-position="5"></div>
+                    <div class="tick-mark major" data-position="6">
+                        <span class="tick-label">6</span>
+                    </div>
+                </div>
+
+                <!-- Drop zones for numbers -->
+                <div class="number-positions">
+                    <div class="number-position" data-position="-5" aria-label="Position -5"></div>
+                    <div class="number-position" data-position="-2" aria-label="Position -2"></div>
+                    <div class="number-position" data-position="0" aria-label="Position 0"></div>
+                    <div class="number-position" data-position="1" aria-label="Position 1"></div>
+                    <div class="number-position" data-position="4" aria-label="Position 4"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="nl-instructions" class="sr-only">
+            Number line interface: Drag numbers from the collection area to their correct positions on the number line. Each number has a specific correct position.
+        </div>
+
+        <button class="check-button" onclick="checkNumberLine(this)" aria-describedby="nl-feedback">
+            Check Placement
+        </button>
+        <button class="show-answer-button" onclick="showNumberLineAnswer(this)" aria-describedby="nl-feedback">
+            Show Correct Placement
+        </button>
+        <div class="feedback" id="nl-feedback" aria-live="polite" aria-atomic="true"></div>
+    </section>
+</main>
+
+<footer>
+    <p class="sr-only">End of interactive questions. Use the reset button to start over or the show answers button to see all correct responses.</p>
+</footer>
+
+<script src="question_types.js"></script>
+</body>
+</html>
